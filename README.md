@@ -6,8 +6,9 @@ ada-challenge
 
 Narrative challenge -- see reqts.md.
 Tech Stack:
-* CE + Cats (IO effect type + FP Abstractions for Foldable)
-* circe (json encoding and decoding and parse failure)
+* CE (Effect Type + Concurrency) + Cats (IO effect type + FP Abstractions)
+* circe (json encoding and decoding and parse failures)
+* doobie (database abstraction)
 * http4s (server + dsl + validating query params)
 * scala 3.1.3
 
