@@ -22,5 +22,5 @@ jobs:
         uses: cachix/install-nix-action@v16
         
       - name: "Run with ${{ matrix.java }} 🚀"
-        run: nix-shell --argstr jdk "${{ matrix.java }}" --run "sbt buildNarrative"
+        run: nix-shell --argstr jdk "${{ matrix.java }}" --run "sbt buildAda"
 
