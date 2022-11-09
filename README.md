@@ -14,19 +14,7 @@ Tech Stack:
 ## Usage and Running (in a sbt shell)
 * `sbt`
 * `clean compile`
-* `narrative/run`
-
-Make curl calls to add events like so:
-`curl -X POST 'http://localhost:8080/analytics?timestamp=10032342000&user=user2&event=click'`
-`curl -X POST 'http://localhost:8080/analytics?timestamp=10032342000&user=user3&event=click'`
-`curl -X POST 'http://localhost:8080/analytics?timestamp=10032342000&user=user2&event=impression'`
-`curl -X POST 'http://localhost:8080/analytics?timestamp=10032342000&user=user3&event=impression'`
-`curl -X POST 'http://localhost:8080/analytics?timestamp=10032342000&user=user4&event=click'`
-
-Make curl call to get summary stats like so:
-`curl 'http://localhost:8080/analytics?timestamp=10032342000'`
-
-Note:  There is a CI (github actions) job enabled for this repo.
+* `ada/run`
 
 ## ScalaFmt and ScalaFix
 To apply scalafmt and scalafix prior to push run
