@@ -1,8 +1,10 @@
 package api
 
 import cats.effect.*
-import constants.Constants.*
+
 import org.http4s.ember.server.EmberServerBuilder
+
+import constants.Constants.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 class BotServer(botService: BotService):

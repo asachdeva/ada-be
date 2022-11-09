@@ -1,11 +1,14 @@
 package repo
 
-import io.circe.*
 import cats.effect.*
 import cats.implicits.*
-import constants.Constants.*
+
+import io.circe.*
+
 import doobie.implicits.*
 import doobie.util.transactor.Transactor
+
+import constants.Constants.*
 import model.*
 
 trait BotRepo:
@@ -13,10 +16,12 @@ trait BotRepo:
   val xa = Transactor.fromDriverManager[IO](driver, DB_URL, dbUserName, dbPassword)
   val botQueries = new BotQueries(xa)
 
-  // Interface 
+  // Interface
   def getAllMessages(): IO[List[String]]
-  def searchAnswers(searchTitle: String): IO[Answer]
+  def searchAnswers(query: String): IO[Answer]
+  def searchFullAnswers(query: String): IO[FullAnswer]
 
 object BotRepo extends BotRepo:
   def getAllMessages() = botQueries.getMessages
-  def searchAnswers(searchTitle: String) = botQueries.getAnswers(searchTitle)
+  def searchAnswers(query: String) = botQueries.getAnswers(query)
+  def searchFullAnswers(query: String) = botQueries.getFullAnswers(query)

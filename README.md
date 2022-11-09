@@ -17,6 +17,24 @@ Tech Stack:
 * `clean compile`
 * `ada/run`
 
+## Challenge 1
+Make curl calls to retrieve parsed messages like so:
+`curl http://localhost:5005/messages`
+
+## Challenge 2
+Make curl call to get answers ike so:
+```sh
+curl -d '{"query":"Star Trek"}' -H "Content-Type: application/json" -X POST http://localhost:5005/search
+```
+
+Make curl call to get full answers ike so:
+```sh
+curl -d '{"query":"Star Trek"}' -H "Content-Type: application/json" -X POST http://localhost:5005/fullSearch
+```
+
+_Note_:  There is CI (github actions) job enabled for this repository.
+
+
 ## ScalaFmt and ScalaFix
 To apply scalafmt and scalafix prior to push run
 ```bash

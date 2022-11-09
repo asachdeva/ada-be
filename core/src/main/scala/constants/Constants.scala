@@ -12,6 +12,5 @@ object Constants:
   val dbName = "database"
   val dbUserName = ""
   val dbPassword = ""
-  val dbPoolSize = 20
 
   val DB_URL = s"jdbc:sqlite:$dbName.db"

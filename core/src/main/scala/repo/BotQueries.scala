@@ -4,11 +4,11 @@ import cats.*
 import cats.effect.*
 import cats.implicits.*
 
+import io.circe.*
+
 import doobie.*
 import doobie.implicits.*
 import doobie.util.transactor.Transactor
-
-import io.circe.*
 
 import model.*
 
@@ -18,21 +18,21 @@ class BotQueries(transactor: Transactor[IO]) {
     def secondParse(raw: String, allStateIdsMap: Map[String, String]): String =
       raw match
         case s"$head{$stateId|}$tail" if allStateIdsMap.contains(stateId) =>
-          head + allStateIdsMap.get(stateId).get + tail
+          head + allStateIdsMap(stateId) + tail
         case s"$head{$stateId|$default}$tail" =>
           head + default + tail
 
     rawMessages.map {
       case s"$head{$stateId|}$tail" if allStateIdsMap.contains(stateId) =>
-        head + allStateIdsMap.get(stateId).get + tail
+        head + allStateIdsMap(stateId) + tail
       case s"$head{$stateId|$default}$tail" if allStateIdsMap.contains(stateId) =>
-        val stem = allStateIdsMap.get(stateId).get
+        val stem = allStateIdsMap(stateId)
         val maybe = head + stem + tail.replace(s"{$stateId|}", stem)
         if (maybe.contains("{")) secondParse(maybe, allStateIdsMap) else maybe
       case s"$head{$stateId|$default}$tail" =>
         val maybe = head + default + tail
         if (maybe.contains("{")) secondParse(maybe, allStateIdsMap) else maybe
-    }.toList
+    }
   }
 
   def getMessages: IO[List[String]] =
@@ -42,7 +42,15 @@ class BotQueries(transactor: Transactor[IO]) {
       parsedMessages = parseRawMessages(rawMessageBodies, allStateIdsMap)
     } yield parsedMessages
 
-  def getAnswers(query: String): IO[Answer] = BotQueries.answersQuery(query).option.transact(transactor).map(_.getOrElse(Answer(0, "")))
+  def getAnswers(query: String): IO[Answer] =
+    for {
+      result <- BotQueries.answersQuery(query).option.transact(transactor)
+    } yield result.getOrElse(Answer(0, ""))
+
+  def getFullAnswers(query: String): IO[FullAnswer] =
+    for {
+      result <- BotQueries.fullAnswersQuery(query).option.transact(transactor)
+    } yield result.getOrElse(FullAnswer(0, 0, "", ""))
 
 }
 
@@ -59,9 +67,19 @@ object BotQueries {
     statement.query[(String, String)]
   }
 
-  def answersQuery(query: String) = {
+  def fullAnswersQuery(query: String) = {
+    val likeQuery = query + "%"
     val statement =
-      sql"""SELECT * FROM answers WHERE title LIKE $query""".stripMargin
+      fr"""SELECT a.id, a.title, b.id as blockId, b.content FROM answers a  
+          LEFT JOIN blocks b ON b.answer_id = a.id
+          WHERE a.title LIKE $likeQuery""".stripMargin
+    statement.query[FullAnswer]
+  }
+
+  def answersQuery(query: String) = {
+    val likeQuery = query + "%"
+    val statement =
+      sql"""SELECT * FROM answer WHERE title LIKE $likeQuery""".stripMargin
     statement.query[Answer]
   }
 

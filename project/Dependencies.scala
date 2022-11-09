@@ -47,6 +47,7 @@ object Dependencies {
     // Test
     lazy val scalaCheck = "org.scalacheck" %% "scalacheck" % Versions.scalaCheck
     lazy val scalaTest = "org.scalatest" %% "scalatest" % Versions.scalaTest
+    lazy val doobieTest = doobie("scalatest")
 
     // Runtime
     lazy val logback = "ch.qos.logback" % "logback-classic" % Versions.logback

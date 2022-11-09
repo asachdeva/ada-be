@@ -4,32 +4,38 @@ import cats.*
 import cats.effect.*
 import cats.implicits.*
 
+import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.syntax.*
 
-import model.*
-
 import org.http4s.Status.*
 import org.http4s.*
+import org.http4s.circe.CirceEntityDecoder.circeEntityDecoder
 import org.http4s.circe.CirceEntityEncoder.*
 import org.http4s.circe.*
 import org.http4s.dsl.*
 import org.http4s.dsl.io.*
 import org.http4s.implicits.*
+
+import model.*
 import repo.*
 
 class BotService(botRepo: BotRepo):
-  given searchQueryDecoder: QueryParamDecoder[SearchQuery] = QueryParamDecoder[String].emap(SearchQuery.parseSearchQuery)
-  object SearchQueryParamMatcher extends ValidatingQueryParamDecoderMatcher[SearchQuery]("query")
+
+  object SearchQuery extends QueryParamDecoderMatcher[String]("query")
 
   val routes = HttpRoutes
     .of[IO] {
       case GET -> Root / "messages" => Ok(botRepo.getAllMessages())
-      case POST -> Root / "search" :? SearchQueryParamMatcher(maybeSearchQuery) => 
-        maybeSearchQuery.fold(
-          parseFailures => BadRequest(s"Invalid Request param query: ${parseFailures.map(_.sanitized)}"),
-          searchQuery => botRepo.searchAnswers(searchQuery).flatMap(result => Ok(s"""${result}"""))
-        )
-
+      case req @ POST -> Root / "search" =>
+        for {
+          searchQuery <- req.as[SearchQuery]
+          resp <- Ok(botRepo.searchAnswers(searchQuery.query))
+        } yield resp
+      case req @ POST -> Root / "fullSearch" =>
+        for {
+          searchQuery <- req.as[SearchQuery]
+          resp <- Ok(botRepo.searchFullAnswers(searchQuery.query))
+        } yield resp
     }
     .orNotFound

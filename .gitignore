@@ -52,4 +52,6 @@ Stuff*
 .sbtopts
 .bloop/
 .metals/
+.bsp/
+.vscode/
 

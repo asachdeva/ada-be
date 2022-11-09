@@ -7,7 +7,7 @@ ThisBuild / organization := "ada.cx"
 
 // ScalaFix
 ThisBuild / semanticdbEnabled := true
-ThisBuild / semanticdbVersion := "4.5.13"
+ThisBuild / semanticdbVersion := "4.6.0"
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
 // Reload Sbt on changes to sbt or dependencies
@@ -70,7 +70,7 @@ lazy val `ada` = project
   .settings(
     testSettings,
     organization := "ada.cx",
-    name := "ada-analytics",
+    name := "ada-bot-crud",
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "3.1.3",
     Defaults.itSettings,
@@ -82,6 +82,7 @@ lazy val `ada` = project
       Libraries.circeParser,
       Libraries.doobieCore,
       Libraries.doobieHikari,
+      Libraries.doobieTest % Test,
       Libraries.http4sCirce,
       Libraries.http4sDsl,
       Libraries.http4sServer,
