@@ -1,7 +1,7 @@
 ada-challenge
 ===================
 
-[![Actions Status](https://github.com/asachdeva/ada-challenge/workflows/Build/badge.svg)](https://github.com/asachdeva/ada-challenge/actions)
+[![Actions Status](https://github.com/asachdeva/ada-be/workflows/Build/badge.svg)](https://github.com/asachdeva/ada-be/actions)
 <a href="https://typelevel.org/cats/"><img src="https://typelevel.org/cats/img/cats-badge.svg" height="40px" align="right" alt="Cats friendly" /></a>
 
 Narrative challenge -- see reqts.md.
